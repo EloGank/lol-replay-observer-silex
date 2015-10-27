@@ -15,9 +15,20 @@ $app = new \Silex\Application([
     'debug' => true
 ]);
 
+$app->register(new \Silex\Provider\MonologServiceProvider(), array(
+    'monolog.logfile' => __DIR__ . '/../logs/error.log',
+    'monolog.name'    => 'Elogank Replay Observer',
+    'monolog.level'   => $app['debug'] ? \Monolog\Logger::INFO : \Monolog\Logger::ERROR
+));
+
 $app->register(new \EloGank\Replay\Observer\Provider\ObserverServiceProvider([
-    'replay.dir_path' => __DIR__ . '/../../lol-replay-downloader-cli/replays'
-]));
+    'replay.dir_path' => __DIR__ . '/../../lol-replay-downloader-cli/replays',
+    'cache' => new \EloGank\Replay\Observer\Cache\Adapter\RedisCacheAdapter(new \Predis\Client([
+        'host' => '127.0.0.1',
+        'port' => 6379
+    ]))
+], $app['logger']));
+
 $app->mount('/', new \EloGank\Replay\Observer\Provider\ObserverControllerProvider());
 
 $app->run();

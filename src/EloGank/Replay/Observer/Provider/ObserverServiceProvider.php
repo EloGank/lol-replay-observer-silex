@@ -13,7 +13,6 @@ namespace EloGank\Replay\Observer\Provider;
 
 use EloGank\Replay\Downloader\Client\ReplayClient;
 use EloGank\Replay\Observer\Cache\Adapter\CacheAdapterInterface;
-use EloGank\Replay\Observer\Cache\Adapter\MemoryCacheAdapter;
 use EloGank\Replay\Observer\Client\ReplayObserverClient;
 use EloGank\Replay\Observer\ReplayObserver;
 use Psr\Log\LoggerInterface;
@@ -92,8 +91,7 @@ class ObserverServiceProvider implements ServiceProviderInterface
     {
         return [
             'auth.strict' => false,
-            'api.client'  => ReplayClient::getDefaultConfigs(),
-            'cache'       => new MemoryCacheAdapter()
+            'api.client'  => ReplayClient::getDefaultConfigs()
         ];
     }
 
@@ -106,7 +104,7 @@ class ObserverServiceProvider implements ServiceProviderInterface
             throw new \RuntimeException('Missing configuration "replay.dir_path" in ObserverServiceProvider');
         }
 
-        if (!$this->config['cache'] instanceof CacheAdapterInterface) {
+        if (!isset($this->config['cache']) || !$this->config['cache'] instanceof CacheAdapterInterface) {
             throw new \RuntimeException('The cache configuration class must implement the CacheAdapterInterface');
         }
     }
