@@ -174,7 +174,7 @@ class ObserverController
         }
 
         // Read the file content
-        readFile($filePath);
+        readfile($filePath);
 
         return $response;
     }

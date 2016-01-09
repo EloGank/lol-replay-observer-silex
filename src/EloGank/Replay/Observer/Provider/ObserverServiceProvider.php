@@ -63,8 +63,8 @@ class ObserverServiceProvider implements ServiceProviderInterface
         $app['lol.replay.observer'] = $app->share(function (Application $app) {
             $observer = new ReplayObserver(
                 $app['lol.replay.observer.client'],
-                $app['lol.replay.api.client'],
                 $this->config['cache'],
+                $app['lol.replay.api.client'],
                 $this->config['auth.strict']
             );
 
